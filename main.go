@@ -15,7 +15,7 @@ import (
 	"github.com/cheggaaa/pb/v3"
 	"github.com/google/goterm/term"
 	"github.com/olekukonko/tablewriter"
-	"github.com/sandeeprenjith/dnsblast/qry"
+	"github.com/sfroment/dnsblast/qry"
 )
 
 // Struct for the data returned by the send_query function (to channel).
@@ -88,7 +88,7 @@ mainLoop:
 							qname = qry.PQname(3, i)
 						} else if chr == 0 {
 							// Creating an unpredictable Qname
-							qname = qry.RQname(3)
+							qname = qry.RQname(2)
 						}
 					} else {
 						rand.Seed(time.Now().UnixNano())

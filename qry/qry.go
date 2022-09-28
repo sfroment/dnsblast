@@ -2,13 +2,21 @@ package qry
 
 import (
 	"crypto/tls"
-	"github.com/google/goterm/term"
-	"github.com/miekg/dns"
 	"log"
+	"math/rand"
 	"net"
 	"sync"
 	"time"
+
+	"github.com/google/goterm/term"
+	"github.com/miekg/dns"
 )
+
+func getRandType() string {
+	rand.Seed(time.Now().UnixNano())
+	types := []string{"A", "SOA", "MX", "TXT", "AAAA"}
+	return types[rand.Intn(len(types))]
+}
 
 // Send a single DNS query
 func SimpleQuery(server string,
@@ -19,21 +27,26 @@ func SimpleQuery(server string,
 	proto string,
 	wg *sync.WaitGroup,
 	noverify bool) {
+
 	s_server := net.JoinHostPort(server, port)
-	qrytype := Qtype(qtype)
+	typ := getRandType()
+	qrytype := Qtype(typ)
+
 	question := new(dns.Msg)
 	question.SetQuestion(dns.Fqdn(qname), qrytype)
 	c := new(dns.Client)
 	c.Dialer = &net.Dialer{
-		Timeout: 5 * time.Second,
+		Timeout: 15 * time.Second,
 	}
-	c.DialTimeout = 5 * time.Second
+	c.Timeout = 15 * time.Second
+	c.DialTimeout = 15 * time.Second
 	c.Net = proto
 	if proto == "tcp-tls" {
 		var tlc tls.Config
 		tlc.InsecureSkipVerify = noverify
 		c.TLSConfig = &tlc
 	}
+
 	ans, rtt, err := c.Exchange(question, s_server)
 	if err != nil {
 		log.Println(term.Redf(err.Error()))

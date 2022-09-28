@@ -16,11 +16,11 @@ func PQname(labels int, suffix int) string {
 		labelfmt := labelprefix + strconv.Itoa(suffix) + "."
 		label = labelfmt + label
 	}
-	label = label + "lab"
+	label = label + "com"
 	return label
 }
 
-//Random string
+// Random string
 func Rstring(l int) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]byte, l)
@@ -30,13 +30,13 @@ func Rstring(l int) string {
 	return string(b)
 }
 
-//Generating Random query name
+// Generating Random query name
 func RQname(labels int) string {
 	var label string
 	for i := 1; i <= (labels - 1); i++ {
 		labelfmt := Rstring(16) + "."
 		label = labelfmt + label
 	}
-	label = label + "lab"
+	label = label + "com"
 	return label
 }
